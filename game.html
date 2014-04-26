@@ -60,6 +60,34 @@
         ]);
         Resources.onReady(init);
 
+        // Mouse handling
+        var Mouse = {'x':0,'y':0, 'state':'up', 'down':false};
+        var lastMousePos = {'x':0,'y':0};
+        var mouseDragStart = {'x':0,'y':0};
+        var mouseDragEnd = {'x':0,'y':0};
+        canvas.onmousemove = function(event)
+        {
+            lastMousePos.x = Mouse.x;
+            lastMousePos.y = Mouse.y;
+            Mouse.x = event.layerX;
+            Mouse.y = event.layerY;
+            Mouse.state = (Mouse.down)?'dragged':'moved';
+        }
+        canvas.onmousedown = function(event)
+        {
+            mouseDragStart.x = event.layerX;
+            mouseDragStart.y = event.layerY;
+            Mouse.state = 'down';
+            Mouse.down = true;
+        }
+        canvas.onmouseup = function(event)
+        {
+            mouseDragEnd.x = event.layerX;
+            mouseDragEnd.y = event.layerY;
+            Mouse.state = 'up';
+            Mouse.down = false;
+        }
+
         // Key code handling
         document.addEventListener('keydown', keyDownHandler, false);
         document.addEventListener('keyup', keyUpHandler, false);

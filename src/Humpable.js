@@ -8,7 +8,7 @@ function Humpable(){
 	this._update = GameObject.prototype.update;
 	this.width = 50;
 	this.height = 50;
-
+	this.name = "Humpable";
 	this.collisionModel = new CollisionModel(this);
 }
 

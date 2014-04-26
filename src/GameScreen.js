@@ -26,10 +26,10 @@ function GameScreen(){
 	);
 	gameObjects.push(plr);
 	player = plr;
-
+	
 	var hu = new Humpable();
 	hu.x = 200;
-	hu.y = 320;
+	hu.y = 200;
 	hu.sprite = new Sprite
 	(
 		'assets/sprites/omega.png',

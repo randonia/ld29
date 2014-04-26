@@ -1,11 +1,8 @@
 // Player.js
 
 // Some Consts
-// Max velocities in x/y
-var pMAXvX = 10;
-var pMAXvY = 10;
 // Player delta x/y (for movement velocities)
-var pDX = 5;
+var pDX = 3;
 var pDY = pDX;
 
 // Inheritance!
@@ -14,6 +11,7 @@ Player.prototype = new GameObject();
 function Player(){
 	this._draw = GameObject.prototype.draw;
 	this._update = GameObject.prototype.update;
+	this._handleCollision = GameObject.prototype.handleCollision;
 	this.vX = 0;
 	this.vY = 0;
 	this.width = 32;
@@ -22,6 +20,10 @@ function Player(){
 	this.collisionModel = new CollisionModel(this);
 	this.collisionModel.staticObj = false;
 	this.name = "Player";
+	this.nearestHumpable = undefined;
+
+	this.flickStart;
+	this.flickEnd;
 }
 
 Player.prototype.draw = function(ctx){
@@ -31,14 +33,24 @@ Player.prototype.draw = function(ctx){
 	ctx.strokeRect(this.x - this.width * 0.5, this.y - this.height * 0.5,
 				   this.width, this.height);
 	
+	if (Mouse.down)
+	{
+		ctx.beginPath();
+		ctx.strokeStyle = 'rgb(255,255,0)';
+		ctx.moveTo(this.x, this.y);
+		ctx.lineTo(Mouse.x, Mouse.y);
+		ctx.stroke();
+		ctx.closePath();
+	}
 }
 
 Player.prototype.update = function(delta){
 	this._update(delta);
 	this.handleInput();
-
+	// Movement
 	this.x = Math.clamp(this.x + this.vX, BOUNDLEFT, BOUNDRIGHT);
 	this.y = Math.clamp(this.y + this.vY, BOUNDTOP, BOUNDBOTTOM);
+
 
 }
 
@@ -66,3 +78,13 @@ Player.prototype.handleInput = function(){
 		this.vY = this.vY / SQRT2;
 	}
 }
+
+Player.prototype.handleCollision = function(other) 
+{
+	switch(other.name)
+	{
+		case "Humpable":
+			this.nearestHumpable = other
+			break;
+	}
+};
