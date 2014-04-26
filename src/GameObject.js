@@ -22,7 +22,7 @@ GameObject.prototype.update = function(delta)
 GameObject.prototype.draw = function(ctx){
 	if (this.sprite != undefined)
 	{
-		this.sprite.render(ctx, this.x, this.y, this.width, this.height);
+		this.sprite.draw(ctx, this.x, this.y, this.width, this.height);
 	}
 
 	// Debug draw a circle for this position

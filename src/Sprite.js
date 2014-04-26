@@ -15,7 +15,7 @@ Sprite.prototype.update = function(delta)
     this._index += this.speed*delta;
 }
 
-Sprite.prototype.render = function(context, objX, objY, objWidth, objHeight)
+Sprite.prototype.draw = function(context, objX, objY, objWidth, objHeight)
 {
     var frame;
     
