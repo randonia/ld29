@@ -15,7 +15,7 @@ Sprite.prototype.update = function(delta)
     this._index += this.speed*delta;
 }
 
-Sprite.prototype.render = function(context, objX, objY)
+Sprite.prototype.render = function(context, objX, objY, objWidth, objHeight)
 {
     var frame;
     
@@ -48,9 +48,13 @@ Sprite.prototype.render = function(context, objX, objY)
         x += frame * this.size[0];
     }
     
-    context.drawImage(Resources.get(this.url),
+    context.drawImage(
+                        Resources.get(this.url),
                         x, y,
                         this.size[0], this.size[1],
-                        (objX - (.5 * this.size[0])), (objY - (.5 * this.size[1])),
-                        this.size[0], this.size[1]);
+                        (objX - (.5 * objWidth)), 
+                        (objY - (.5 * objHeight)),
+                        (objWidth), 
+                        (objHeight)
+                    );
 }

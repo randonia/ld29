@@ -19,14 +19,15 @@ function Player(){
 	this.width = 32;
 	this.height = 32;
 	this.radius = 20;
-	this.collisionModel = new CollisionModel(this);
+	//this.collisionModel = new CollisionModel(this);
 }
 
 Player.prototype.draw = function(ctx){
 	this._draw(ctx);
-	// Draw box for the player
+	/* Draw box for the player
 	ctx.strokeStyle = "rgb(0,255,0)";
 	ctx.strokeRect(this.x - this.width * 0.5, this.y - this.height * 0.5, this.width, this.height);
+	*/
 }
 
 Player.prototype.update = function(delta){

@@ -14,9 +14,11 @@ function Humpable(){
 Humpable.prototype.draw = function(ctx) 
 {
 	this._draw(ctx);
+	/*
 	ctx.strokeStyle = "rgb(255,0,0)";
 	ctx.strokeRect(this.x - this.width * 0.5, this.y - this.height * 0.5, 
 				 this.width, this.height);
+	*/
 };
 
 Humpable.prototype.update = function(delta) 
