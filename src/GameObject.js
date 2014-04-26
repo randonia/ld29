@@ -12,8 +12,8 @@ GameObject.prototype.draw = function(ctx){
 	// Debug draw a circle for this position
 	ctx.strokeStyle = "rgb(255,0,255)";
 	ctx.beginPath();
-	var hRad = 2;
-	ctx.arc(this.x - hRad, this.y - hRad, hRad, 0, 2 * Math.PI);
+	var hRad = 1;
+	ctx.arc(this.x - hRad * 0.5, this.y - hRad * 0.5, hRad , 0, 2 * Math.PI);
 	ctx.stroke();
 };
 
