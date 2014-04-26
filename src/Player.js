@@ -8,8 +8,9 @@ var pMAXvY = 10;
 var pDX = 5;
 var pDY = pDX;
 
+// Inheritance!
+Player.prototype = new GameObject();
 function Player(){
-	this.prototype = GameObject.prototype;
 	this._draw = GameObject.prototype.draw;
 	this._update = GameObject.prototype.update;
 	this.vX = 0;

@@ -1,5 +1,7 @@
 // Humpable
 
+// Inheritance!
+Humpable.prototype = new GameObject();
 function Humpable(){
 	this.prototype = GameObject.prototype;
 	this._draw = GameObject.prototype.draw
