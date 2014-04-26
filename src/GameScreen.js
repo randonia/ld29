@@ -40,6 +40,54 @@ function GameScreen(){
 
 	);
 	gameObjects.push(hu);
+
+	var hu = new Humpable();
+	hu.x = 643;
+	hu.y = 234;
+	hu.sprite = new Sprite
+	(
+		'assets/sprites/omega.png',
+		[0,0],
+		[33,22],
+		5,
+		[0, 1, 2, 3],
+		'horizontal',
+		false
+
+	);
+	gameObjects.push(hu);
+
+	var hu = new Humpable();
+	hu.x = 180;
+	hu.y = 400;
+	hu.sprite = new Sprite
+	(
+		'assets/sprites/omega.png',
+		[0,0],
+		[33,22],
+		5,
+		[0, 1, 2, 3],
+		'horizontal',
+		false
+
+	);
+	gameObjects.push(hu);
+
+	var hu = new Humpable();
+	hu.x = 200;
+	hu.y = 320;
+	hu.sprite = new Sprite
+	(
+		'assets/sprites/omega.png',
+		[0,0],
+		[33,22],
+		5,
+		[0, 1, 2, 3],
+		'horizontal',
+		false
+
+	);
+	gameObjects.push(hu);
 };
 
 GameScreen.prototype.init = function(){};
