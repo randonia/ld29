@@ -5,6 +5,7 @@ function GameObject(){
 	this.y = 0;
 	this.radius = 0;
 	this.sprite;
+	this.alive = true;
 };
 
 GameObject.prototype.update = function(delta)
@@ -31,5 +32,7 @@ GameObject.prototype.draw = function(ctx){
 
 GameObject.prototype.collidesWith = function(other) 
 {
-	return 
+	return false;
 };
+
+GameObject.prototype.handleCollision = function(other){};
