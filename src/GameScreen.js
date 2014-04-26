@@ -4,21 +4,22 @@ var BOUNDLEFT = 100;
 var BOUNDRIGHT = 700;
 var BOUNDTOP = 100;
 var BOUNDBOTTOM = 500;
+var BOUNDWIDTH = BOUNDRIGHT - BOUNDLEFT;
+var BOUNDHEIGHT = BOUNDBOTTOM - BOUNDTOP;
 
 var gameObjects = []
 
 
 function GameScreen(){
-	go = new GameObject();
-	go.x = 50;
-	go.y = 100;
-	go.radius = 5;
-	gameObjects.push(go);
-
 	var plr = new Player();
 	plr.x = 5;
 	plr.y = 10;
 	gameObjects.push(plr);
+
+	var hu = new Humpable();
+	hu.x = 400;
+	hu.y = 300;
+	gameObjects.push(hu);
 };
 
 GameScreen.prototype.init = function(){};
@@ -35,7 +36,7 @@ GameScreen.prototype.draw = function(ctx){
 	ctx.clearRect(0,0, GAMEWIDTH, GAMEHEIGHT);
 	// Gameplay boundaries (for testing)
 	ctx.strokeStyle = 'rgb(0,0,0)';
-	ctx.strokeRect(BOUNDLEFT, BOUNDTOP, BOUNDRIGHT - BOUNDLEFT, BOUNDBOTTOM - BOUNDTOP);
+	ctx.strokeRect(BOUNDLEFT, BOUNDTOP, BOUNDWIDTH, BOUNDHEIGHT);
 	
 	for(var index = 0; index < gameObjects.length; ++index){
 		var go = gameObjects[index];
