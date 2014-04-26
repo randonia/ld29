@@ -32,6 +32,10 @@
     <script src="src/Utils.js"></script>
     <script src="src/GameScreen.js"></script>
     <script src="src/GameObject.js"></script>
+    <script src="src/Resources.js"></script>
+    <script src="src/Entity.js"></script>
+    <script src="src/Sprite.js"></script>
+
     <script src="src/Player.js"></script>
 
 
@@ -39,53 +43,72 @@
         var canvas = document.getElementById("game");
         var context = canvas.getContext("2d");
 
-        var lastUpdate = Date.now();
-        var tickInterval = setInterval(tick, 1000 / 60);
-
         // Some Consts
         var GAMEWIDTH = 800;
         var GAMEHEIGHT = 600;
 
-        // Key code handling
-        document.addEventListener('keydown', keyDownHandler, false);
-        document.addEventListener('keyup', keyUpHandler, false);
-        var KEYCODES = {
-            'left': 37,
-            'up': 38,
-            'right': 39,
-            'down': 40,
-            'a':65,
-            'w':87,
-            's':83,
-            'd':68,
-            'p':80
-        }
-        // Use the keycode to access elements in this
-        var keyStates = {};
-        // init the key states
-        for (var key in KEYCODES){
-            keyStates[KEYCODES[key]] = false;
-        }
+        var lastUpdate;
+        var tickInterval;
+        var gameScreen;
 
-        function keyUpHandler(event){
-            keyStates[event.keyCode] = false;
+        Resources.load([
+            "assets/sprites/rabite.png"
+        ]);
+        Resources.onReady(init);
+
+        function init()
+        {
+            console.log("Success!");
+            setUpKeys();
+
+            lastUpdate = Date.now();
+            tickInterval = setInterval(tick, 1000 / 60);
+
+            gameScreen = new GameScreen();
         }
 
-        function keyDownHandler(event){
-            keyStates[event.keyCode] = true;
+        function setUpKeys()
+        {
+            // Key code handling
+            document.addEventListener('keydown', keyDownHandler, false);
+            document.addEventListener('keyup', keyUpHandler, false);
+            var KEYCODES = {
+                'left': 37,
+                'up': 38,
+                'right': 39,
+                'down': 40,
+                'a':65,
+                'w':87,
+                's':83,
+                'd':68,
+                'p':80
+            }
+            // Use the keycode to access elements in this
+            var keyStates = {};
+            // init the key states
+            for (var key in KEYCODES){
+                keyStates[KEYCODES[key]] = false;
+            }
+
+            function keyUpHandler(event){
+                keyStates[event.keyCode] = false;
+            }
+
+            function keyDownHandler(event){
+                keyStates[event.keyCode] = true;
+            }
+
+            function isKeyUp(key_name){
+                return KEYCODES[key_name] != undefined && !keyStates[KEYCODES[key_name]]
+            }
+
+            function isKeyDown(key_name){
+                return KEYCODES[key_name] != undefined && keyStates[KEYCODES[key_name]]
+            }
         }
 
-        function isKeyUp(key_name){
-            return KEYCODES[key_name] != undefined && !keyStates[KEYCODES[key_name]]
-        }
-
-        function isKeyDown(key_name){
-            return KEYCODES[key_name] != undefined && keyStates[KEYCODES[key_name]]
-        }
-
-        var gameScreen = new GameScreen();
-
-        function tick(delta){
+        function tick(delta)
+        {
             var meow = Date.now();
             var delta = meow - lastUpdate;
             lastUpdate = meow;
