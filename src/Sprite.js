@@ -15,7 +15,7 @@ Sprite.prototype.update = function(delta)
     this._index += this.speed*delta;
 }
 
-Sprite.prototype.render = function(context)
+Sprite.prototype.render = function(context, objX, objY)
 {
     var frame;
     
@@ -51,6 +51,6 @@ Sprite.prototype.render = function(context)
     context.drawImage(Resources.get(this.url),
                         x, y,
                         this.size[0], this.size[1],
-                        0, 0,
+                        (objX - (.5 * this.size[0])), (objY - (.5 * this.size[1])),
                         this.size[0], this.size[1]);
 }

@@ -4,8 +4,8 @@ function GameObject(){
 	this.x = 0;
 	this.y = 0;
 	this.radius = 0;
-	this.sprite;
 	this.alive = true;
+	this.sprite;
 };
 
 GameObject.prototype.update = function(delta)
@@ -26,7 +26,7 @@ GameObject.prototype.draw = function(ctx){
 
 	if (this.sprite != undefined)
 	{
-		this.sprite.render(ctx);
+		this.sprite.render(ctx, this.x, this.y);
 	}
 };
 

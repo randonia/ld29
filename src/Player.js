@@ -10,6 +10,7 @@ var pDY = pDX;
 
 // Inheritance!
 Player.prototype = new GameObject();
+
 function Player(){
 	this._draw = GameObject.prototype.draw;
 	this._update = GameObject.prototype.update;

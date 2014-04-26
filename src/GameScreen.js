@@ -14,13 +14,16 @@ function GameScreen(){
 	var plr = new Player();
 	plr.x = 5;
 	plr.y = 10;
+	plr.sprite = new Sprite
+	(
+		'assets/sprites/frog.png', 
+		[3,1], 
+		[20, 24],
+		10, 
+		[0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0],
+		'horizontal', false
+	);
 	gameObjects.push(plr);
-
-	var frog = new GameObject();
-	frog.x = 400;
-	frog.y = 300;
-	frog.sprite = new Sprite('assets/sprites/frog.png', [5,1], [16, 24]);
-	gameObjects.push(frog);
 
 	var hu = new Humpable();
 	hu.x = 400;
