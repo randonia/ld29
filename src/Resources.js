@@ -22,7 +22,7 @@
     
     function _load(url) 
     {
-        if (resourceCache[url] 
+        if (resourceCache[url])
         {
             return resourceCache[url];
         }
@@ -66,7 +66,7 @@
         readyCallbacks.push(func);
     }
     
-    window.resources = 
+    window.Resources = 
     {
         load: load,
         get: get,
