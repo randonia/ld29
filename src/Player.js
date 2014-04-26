@@ -16,15 +16,17 @@ function Player(){
 	this._update = GameObject.prototype.update;
 	this.vX = 0;
 	this.vY = 0;
+	this.width = 32;
+	this.height = 32;
 	this.radius = 20;
+	this.collisionModel = new CollisionModel(this);
 }
 
 Player.prototype.draw = function(ctx){
 	this._draw(ctx);
 	// Draw box for the player
 	ctx.strokeStyle = "rgb(0,255,0)";
-	var hWid = 20;
-	ctx.strokeRect(this.x - hWid, this.y - hWid, hWid*2, hWid*2);
+	ctx.strokeRect(this.x - this.width * 0.5, this.y - this.height * 0.5, this.width, this.height);
 }
 
 Player.prototype.update = function(delta){

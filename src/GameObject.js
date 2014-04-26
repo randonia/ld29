@@ -3,9 +3,12 @@
 function GameObject(){
 	this.x = 0;
 	this.y = 0;
+	this.width = 1;
+	this.height = 1;
 	this.radius = 0;
 	this.alive = true;
 	this.sprite;
+	this.collisionModel = undefined;
 };
 
 GameObject.prototype.update = function(delta)
