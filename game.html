@@ -32,6 +32,7 @@
     <script src="src/Utils.js"></script>
     <script src="src/GameScreen.js"></script>
     <script src="src/GameObject.js"></script>
+    <script src="src/Humpable.js"></script>
     <script src="src/Player.js"></script>
 
 
@@ -90,7 +91,7 @@
             var delta = meow - lastUpdate;
             lastUpdate = meow;
             
-            gameScreen.update(delta);
+            gameScreen.update(delta * 0.001);
             gameScreen.draw(context);
         }
 
