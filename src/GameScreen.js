@@ -28,6 +28,17 @@ function GameScreen(){
 	var hu = new Humpable();
 	hu.x = 400;
 	hu.y = 300;
+	hu.sprite = new Sprite
+	(
+		'assets/sprites/omega.png',
+		[0,0],
+		[33,22],
+		5,
+		[0, 1, 2, 3],
+		'horizontal',
+		false
+
+	);
 	gameObjects.push(hu);
 };
 
