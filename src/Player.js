@@ -21,6 +21,7 @@ function Player(){
 	this.radius = 20;
 	this.collisionModel = new CollisionModel(this);
 	this.collisionModel.staticObj = false;
+	this.name = "Player";
 }
 
 Player.prototype.draw = function(ctx){
