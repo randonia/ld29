@@ -36,7 +36,15 @@ GameObject.prototype.draw = function(ctx){
 
 GameObject.prototype.collidesWith = function(other) 
 {
-	return false;
+	if(this.collisionModel == undefined || other.collisionModel == undefined)
+	{
+		return false;
+	}
+	var result = this.collisionModel.collidesWith(other.collisionModel);
+	this.x += this.collisionModel.getCorrectionX();
+	this.y += this.collisionModel.getCorrectionY();
+	return result;
 };
 
+// React to the collision appropriately
 GameObject.prototype.handleCollision = function(other){};

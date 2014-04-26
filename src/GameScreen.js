@@ -8,7 +8,7 @@ var BOUNDWIDTH = BOUNDRIGHT - BOUNDLEFT;
 var BOUNDHEIGHT = BOUNDBOTTOM - BOUNDTOP;
 
 var gameObjects = []
-
+var collisionManager = new CollisionManager();
 
 function GameScreen(){
 	var plr = new Player();
@@ -97,6 +97,7 @@ GameScreen.prototype.update = function(delta){
 		var go = gameObjects[index];
 		go.update(delta);
 	};
+	collisionManager.checkCollisions(gameObjects);
 };
 
 GameScreen.prototype.draw = function(ctx){
