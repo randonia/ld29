@@ -17,8 +17,6 @@ function Player(){
 }
 
 Player.prototype.draw = function(ctx){
-	ctx.strokeStyle = 'rgb(0,0,0)';
-	ctx.strokeRect(BOUNDLEFT, BOUNDTOP, BOUNDRIGHT - BOUNDLEFT, BOUNDBOTTOM - BOUNDTOP);
 	this._draw(ctx);
 }
 

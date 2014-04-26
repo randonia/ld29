@@ -33,6 +33,10 @@ GameScreen.prototype.update = function(delta){
 GameScreen.prototype.draw = function(ctx){
 	ctx.save();
 	ctx.clearRect(0,0, GAMEWIDTH, GAMEHEIGHT);
+	// Gameplay boundaries (for testing)
+	ctx.strokeStyle = 'rgb(0,0,0)';
+	ctx.strokeRect(BOUNDLEFT, BOUNDTOP, BOUNDRIGHT - BOUNDLEFT, BOUNDBOTTOM - BOUNDTOP);
+	
 	for(var index = 0; index < gameObjects.length; ++index){
 		var go = gameObjects[index];
 		go.draw(ctx);
