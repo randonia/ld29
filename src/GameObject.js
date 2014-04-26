@@ -9,6 +9,7 @@ function GameObject(){
 	this.alive = true;
 	this.sprite;
 	this.collisionModel = undefined;
+	this.name = "GameObject";
 };
 
 GameObject.prototype.update = function(delta)

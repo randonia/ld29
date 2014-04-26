@@ -6,7 +6,6 @@ function Humpable(){
 	this.prototype = GameObject.prototype;
 	this._draw = GameObject.prototype.draw;
 	this._update = GameObject.prototype.update;
-	// Default "radius" of 10
 	this.width = 50;
 	this.height = 50;
 
