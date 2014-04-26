@@ -19,6 +19,12 @@ function GameScreen(){
 	plr.x = 5;
 	plr.y = 10;
 	gameObjects.push(plr);
+
+	var rabite = new GameObject();
+	rabite.x = 400;
+	rabite.y = 300;
+	rabite.sprite = new Sprite('assets/sprites/frog.png', [5,1], [16, 24]);
+	gameObjects.push(rabite);
 };
 
 GameScreen.prototype.init = function(){};
