@@ -1,3 +1,8 @@
+var DRESSER_SPRITE = new Sprite('assets/sprites/humpable_dresser.png', [0,0], [32, 16], 0, [0], 'horizontal', false);
+var LAMP_SPRITE = new Sprite('assets/sprites/humpable_lamp.png', [0,0], [16, 32], 0, [0], 'horizontal', false);
+var TV_SPRITE = new Sprite('assets/sprites/humpable_television.png', [0,0], [128, 64], 0, [0], 'horizontal', false);
+
+
 // Humpable
 
 // Inheritance!
