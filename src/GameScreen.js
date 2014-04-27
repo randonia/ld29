@@ -57,11 +57,9 @@ function GameScreen(){
 function createPlayer(x, y)
 {
 	var plr = new Player();
-	var frogSprite = new Sprite('assets/sprites/frog.png', [3,1], [20,24],
-								10, [0,1,2,3,4,5,6], 'horizontal', false);
 	plr.x = x;
 	plr.y = y;
-	plr.sprite = frogSprite;
+	plr.sprite = PLAYER_IDLE_SPRITE;
 	plr.spriteOffset = [(.5 * plr.width), (.5 * plr.height)];
 	gameObjects.push(plr);
 	return plr;
@@ -69,12 +67,12 @@ function createPlayer(x, y)
 
 function createHumpable(x, y)
 {
-	var hu = new Humpable();
-	var humpSprite = new Sprite('assets/sprites/omega.png', [0,0], [33,22],
-								5, [0, 1, 2, 3], 'horizontal', false);
+	var humpType = Math.random() * HUMPABLE_TYPES_LENGTH;
+	humpType = Math.round(humpType);
+	var hu = new Humpable(humpType);
+
 	hu.x = x;
 	hu.y = y;
-	hu.sprite = humpSprite;
 	hu.spriteOffset = [(.5 * hu.width), (.5 * hu.height)];
 	gameObjects.push(hu);
 	return hu;

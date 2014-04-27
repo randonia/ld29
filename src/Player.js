@@ -20,6 +20,12 @@ var Player_states =
 	'moving':2
 }
 
+var PLAYER_IDLE_SPRITE = new Sprite('assets/sprites/hero_idle.png', [0,0], [32,32], 3, [0,1], 'horizontal', false);;
+var PLAYER_IDLE_LEFT_SPRITE = new Sprite('assets/sprites/hero_facing_left.png', [0,0], [32,32], 3, [0,1], 'horizontal', false);
+var PLAYER_IDLE_RIGHT_SPRITE = new Sprite('assets/sprites/hero_facing_right.png', [0,0], [32,32], 3, [0,1], 'horizontal', false);
+var PLAYER_FLING_LEFT_SPRITE = new Sprite('assets/sprites/hero_fling_left.png', [0,0], [32,32], 3, [0,1], 'horizontal', false);
+var PLAYER_FLING_RIGHT_SPRITE = new Sprite('assets/sprites/hero_fling_right.png', [0,0], [32,32], 3, [0,1], 'horizontal', false);
+
 // Inheritance!
 Player.prototype = new GameObject();
 
