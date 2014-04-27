@@ -8,6 +8,7 @@ var BOUNDWIDTH = BOUNDRIGHT - BOUNDLEFT;
 var BOUNDHEIGHT = BOUNDBOTTOM - BOUNDTOP;
 
 var gameObjects = [];
+var deadObjects = [];
 var UIObjects = [];
 var player;
 var collisionManager = new CollisionManager();
@@ -23,8 +24,8 @@ function createPlayer()
 	var plr = new Player();
 	var frogSprite = new Sprite('assets/sprites/frog.png', [3,1], [20,24],
 								10, [0,1,2,3,4,5,6], 'horizontal', false);
-	plr.x = 5;
-	plr.y = 10;
+	plr.x = 150;
+	plr.y = 200;
 	plr.sprite = frogSprite;
 	plr.spriteOffset = [(.5 * plr.width), (.5 * plr.height)];
 	gameObjects.push(plr);
@@ -36,8 +37,8 @@ function createHumpables()
 	var hu = new Humpable();
 	var humpSprite = new Sprite('assets/sprites/omega.png', [0,0], [33,22],
 								5, [0, 1, 2, 3], 'horizontal', false);
-	hu.x = 200;
-	hu.y = 320;
+	hu.x = 400;
+	hu.y = 200;
 	hu.sprite = humpSprite;
 	hu.spriteOffset = [(.5 * hu.width), (.5 * hu.height)];
 	gameObjects.push(hu);
@@ -70,14 +71,28 @@ GameScreen.prototype.update = function(delta){
 	{
 		var go = gameObjects[index];
 		go.update(delta);
+		if (!go.alive)
+		{
+			deadObjects.push(go);
+		}
 	};
+
+	while (deadObjects.length > 0)
+	{
+		var deadObj = deadObjects.pop();
+		deadObj.handleDeath();
+		gameObjects.splice(gameObjects.indexOf(deadObj),1);
+		delete deadObj;
+	}
 
 	for (var index = 0; index < UIObjects.length; ++index)
 	{
 		var ui = UIObjects[index];
 		ui.update(delta);
 	};
+
 	collisionManager.checkCollisions(gameObjects);
+	collisionManager.resolveCollisions();
 };
 
 GameScreen.prototype.draw = function(ctx){
