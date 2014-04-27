@@ -12,7 +12,7 @@ var DRESSER_SPRITE = new Sprite('assets/sprites/humpable_dresser.png', [0,0], [3
 var LAMP_SPRITE = new Sprite('assets/sprites/humpable_lamp.png', [0,0], [16, 32], 0, [0], 'horizontal', false);
 var TV_SPRITE = new Sprite('assets/sprites/humpable_television.png', [0,0], [64, 64], 2, [0, 1], 'horizontal', false);
 var TABLE_SPRITE = new Sprite('assets/sprites/humpable_table.png', [0,0], [64, 24], 3, [0, 1], 'horizontal', false);
-var EXPLOSION_SPRITE = new Sprite('assets/sprites/humpable_explosion.png', [0,0], [32, 32], 5, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14], 'horizontal', true);
+var EXPLOSION_SPRITE = new Sprite('assets/sprites/humpable_explosion.png', [0,0], [32, 32], 15, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14], 'horizontal', true);
 
 // Humpable
 
@@ -82,6 +82,8 @@ Humpable.prototype.explode = function()
 	this.state = 'exploding';
 	this.explodeStartTime = Date.now();
 	this.explodeDuration = 750;
+	this.sprite = EXPLOSION_SPRITE;
+	this.sprite._index = 0;
 };
 
 Humpable.prototype.stateExploding = function(delta) 

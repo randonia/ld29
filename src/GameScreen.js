@@ -48,7 +48,7 @@ var player;
 var collisionManager = new CollisionManager();
 
 var levelTimer = 0;
-var numRequiredHumps = 1;
+var numRequiredHumps = 4;
 
 function GameScreen(){
 	this.init();
@@ -147,6 +147,7 @@ GameScreen.prototype.init = function()
 	this.startTime = Date.now();
 	this.state = 'playing';
 	this.shaker = {'x':0, 'y':0};
+	this.flyVelocityY = 0;
 };
 
 GameScreen.prototype.update = function(delta){
@@ -165,6 +166,9 @@ GameScreen.prototype.update = function(delta){
 			break;
 		case 'nextstage':
 			this.stateGoToNextLevel(delta);
+			break;
+		case 'reset':
+			this.stateReset(delta);
 			break;
 	}
 
@@ -191,9 +195,10 @@ GameScreen.prototype.statePlaying = function(delta)
 	{
 		console.log('Going into penetration phase');
 		this.state = 'floorpenetration';
+		this.player.collisionModel.enabled = false;
 		this.penetrateStartTime = Date.now();
 		this.penetrateTimeLimit = 2500;
-		this.penetrateTransitionDuration = 200;
+		this.penetrateTransitionDuration = 500;
 		this.penetratePressesRequired = 10;
 		this.penetrateNumPresses = 0;
 	}
@@ -223,6 +228,21 @@ GameScreen.prototype.stateFloorPenetration = function(delta)
 {
 	var now = Date.now();
 
+	// Transition to the center
+	var transitionDest = {'x':400,'y':300};
+	var transitionTime = 10;
+	if (now > this.penetrateStartTime + this.penetrateTransitionDuration)
+	{
+		transitionDest.x = 400;
+		transitionDest.y = Math.clamp((300 - (this.penetrateNumPresses * 10)),
+									  300,
+									  BOUNDTOP);
+		transitionTime = 100;
+	}
+	
+	this.player.x += (transitionDest.x - this.player.x) / transitionTime;
+	this.player.y += (transitionDest.y - this.player.y) / transitionTime;
+
 	if (isKeyDown('space') && this.spaceWasUp)
 	{
 		this.penetrateNumPresses += 1;
@@ -240,7 +260,7 @@ GameScreen.prototype.stateFloorPenetration = function(delta)
 	// Did they succeed?
 	if (this.penetrateTimeLimit + this.penetrateStartTime < now)
 	{
-
+		this.shaker.x = this.shaker.y = 0;
 		this.setUpStageTransition();
 	}
 };
@@ -248,9 +268,24 @@ GameScreen.prototype.stateFloorPenetration = function(delta)
 GameScreen.prototype.setUpStageTransition = function() 
 {
 	this.stateTransitionStartTime = Date.now();
-	this.stateTransitionDuration = 2000;
+	this.stateTransitionDuration = 1900;
 	this.stateTransitionInitial = 0;
 	this.stateTransitionTarget = 15;
+	this.state = 'nextstage';
+};
+
+GameScreen.prototype.stateReset = function(delta) 
+{
+	while(gameObjects.pop());
+
+	this.buildWorld()
+	createUI();
+
+	this.player.numHumps = 0;
+	this.levelTimer = 150000;
+	this.startTime = Date.now();
+	this.state = 'playing';
+	this.shaker = {'x':0, 'y':0};
 };
 
 GameScreen.prototype.stateLose = function(delta) 
@@ -261,7 +296,8 @@ GameScreen.prototype.stateLose = function(delta)
 GameScreen.prototype.stateGoToNextLevel = function(delta) 
 {
 	// Start the next stage animootion if it doesn't exist
-	var shakeVal = Math.min(Math.easeInQuint(Date.now() - this.stateTransitionStartTime,
+	var now = Date.now();
+	var shakeVal = Math.min(Math.easeInQuint(now - this.stateTransitionStartTime,
 									 this.stateTransitionInitial,
 									 this.stateTransitionTarget - this.stateTransitionInitial,
 									 this.stateTransitionDuration
@@ -269,6 +305,17 @@ GameScreen.prototype.stateGoToNextLevel = function(delta)
 							this.stateTransitionTarget);
 	this.shaker.x = (Math.random() * shakeVal) - shakeVal*0.5
 	this.shaker.y = (Math.random() * shakeVal) - shakeVal*0.5;
+
+	if (now > (this.stateTransitionStartTime + (this.stateTransitionDuration*0.7)))
+	{
+		this.flyVelocityY += 1;
+		this.player.y += this.flyVelocityY;
+	}
+
+	if (now > this.stateTransitionStartTime + this.stateTransitionDuration)
+	{
+		this.state = 'reset';
+	}
 };
 
 GameScreen.prototype.draw = function(ctx){
@@ -313,6 +360,19 @@ GameScreen.prototype.draw = function(ctx){
 		var yPercent = (this.penetrateNumPresses / this.penetratePressesRequired);
 		var yOffset = rect.h * yPercent;
 		ctx.fillRect(rect.x, rect.h + rect.y - yOffset, rect.w, rect.h * yPercent);
+	}
+
+	if (this.state == 'nextstage')
+	{
+		for(var i = 0; i < 25; ++i)
+		{
+			var x = Math.random() * 820 - 10;
+			ctx.beginPath();
+			ctx.strokeStyle = (Math.random() < 0.5)?'#4DA3FF':'#B8B8B8';
+			ctx.moveTo(x, -200);
+			ctx.lineTo(x, 800);
+			ctx.stroke();
+		}
 	}
 
 	// Draw time remaining
