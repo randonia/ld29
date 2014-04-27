@@ -1,5 +1,13 @@
 // Player.js
 
+/* Color pallete
+ *
+ * Skin: 		0xE3C58D
+ * Jacket: 		0x4DA3FF
+ * Pants: 		0xDBDBDB
+ * Dark gray: 	0xB8B8B8
+ * 
+ */
 // Some Consts
 // Player delta x/y (for movement velocities)
 var pDX = 150;
