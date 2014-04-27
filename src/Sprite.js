@@ -1,31 +1,31 @@
 function Sprite(url, pos, size, speed, frames, dir, once)
 {
-    this.pos = pos;
-    this.size = size;
-    this.speed = typeof speed === 'number' ? speed : 0;
-    this.frames = frames;
+    this.clipPos = pos;
+    this.clipSize = size;
+    this.framesPerSec = typeof speed === 'number' ? speed : 0;
+    this.framesList = frames;
     this._index = 0;
     this.url = url;
-    this.dir = dir || 'horizontal';
+    this.direction = dir || 'horizontal';
     this.once = once;
 }
 
 Sprite.prototype.update = function(delta)
 {
-    this._index += this.speed*delta;
+    this._index += this.framesPerSec*delta;
 }
 
-Sprite.prototype.draw = function(context, objX, objY, objWidth, objHeight)
+Sprite.prototype.draw = function(context, renderPos, renderScale, renderOffset)
 {
     var frame;
     
-    if (this.speed > 0)
+    if (this.framesPerSec > 0)
     {
-        var max = this.frames.length;
-        var idx = Math.floor(this._index);
-        frame = this.frames[idx % max];
+        var max = this.framesList.length;
+        var index = Math.floor(this._index);
+        frame = this.framesList[index % max];
         
-        if(this.once && idx >= max)
+        if(this.once && index >= max)
         {
             this.done = true;
             return;
@@ -36,25 +36,28 @@ Sprite.prototype.draw = function(context, objX, objY, objWidth, objHeight)
         frame = 0;
     }
     
-    var x = this.pos[0];
-    var y = this.pos[1];
+    var clipX = this.clipPos[0];
+    var clipY = this.clipPos[1];
     
     if(this.dir == 'vertical')
     {
-        y += frame * this.size[1];
+        clipY += frame * this.clipSize[1];
     }
     else
     {
-        x += frame * this.size[0];
+        clipX += frame * this.clipSize[0];
     }
     
     context.drawImage(
                         Resources.get(this.url),
-                        x, y,
-                        this.size[0], this.size[1],
-                        (objX - (.5 * objWidth)), 
-                        (objY - (.5 * objHeight)),
-                        (objWidth), 
-                        (objHeight)
+                        clipX, clipY,
+                        this.clipSize[0], this.clipSize[1],
+                        (renderPos[0] - renderOffset[0]), 
+                        (renderPos[1] - renderOffset[1]), 
+                        renderScale[0], renderScale[1]
                     );
 }
+                        /*(objX - (.5 * objWidth)), 
+                        (objY - (.5 * objHeight)),
+                        (objWidth), 
+                        (objHeight)*/

@@ -21,17 +21,12 @@ function GameScreen(){
 function createPlayer()
 {
 	var plr = new Player();
+	var frogSprite = new Sprite('assets/sprites/frog.png', [3,1], [20,24],
+								10, [0,1,2,3,4,5,6], 'horizontal', false);
 	plr.x = 5;
 	plr.y = 10;
-	plr.sprite = new Sprite
-	(
-		'assets/sprites/frog.png', 
-		[3,1], 
-		[20, 24],
-		10, 
-		[0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0],
-		'horizontal', false
-	);
+	plr.sprite = frogSprite;
+	plr.spriteOffset = [(.5 * plr.width), (.5 * plr.height)];
 	gameObjects.push(plr);
 	player = plr;
 }
@@ -39,32 +34,31 @@ function createPlayer()
 function createHumpables()
 {
 	var hu = new Humpable();
+	var humpSprite = new Sprite('assets/sprites/omega.png', [0,0], [33,22],
+								5, [0, 1, 2, 3], 'horizontal', false);
 	hu.x = 200;
 	hu.y = 320;
-	hu.sprite = new Sprite
-	(
-		'assets/sprites/omega.png',
-		[0,0],
-		[33,22],
-		5,
-		[0, 1, 2, 3],
-		'horizontal',
-		false
-
-	);
+	hu.sprite = humpSprite;
+	hu.spriteOffset = [(.5 * hu.width), (.5 * hu.height)];
 	gameObjects.push(hu);
 }
 
 function createUI()
 {
 	var progressBar = new UIObject();
-	progressBar.x = 0;
-	progressBar.y = 0;
-	progressBar.width = 50;
-	progressBar.height = 200;
+	var borderSprite = new Sprite('assets/sprites/border2.png', [0,0], [50,400]);
+	var basePos = [50, 100];
+	var baseScale = [50,400];
+
+	var fillSprite = new Sprite('assets/sprites/fill.png', [0,0], [2,2]);
+	var fillPos = [55, 495];
+	var fillScale = [40,-390];
+	
+	progressBar.UIType = UIObject_TYPES.PROGRESS_BAR;
 	progressBar.createProgressBar(
-		(new Sprite ('assets/sprites/border.png', [0,0], [32,32])),
-		(new Sprite ('assets/sprites/fill.png', [0,0], [2,2]))
+		borderSprite, fillSprite, 
+		basePos, fillPos, 
+		baseScale, fillScale
 	);
 	UIObjects.push(progressBar);
 }

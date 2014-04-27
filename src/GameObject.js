@@ -8,6 +8,7 @@ function GameObject(){
 	this.radius = 0;
 	this.alive = true;
 	this.sprite;
+	this.spriteOffset = [0,0];
 	this.collisionModel = undefined;
 	this.name = "GameObject";
 };
@@ -21,15 +22,19 @@ GameObject.prototype.update = function(delta)
 };
 
 GameObject.prototype.draw = function(ctx){
-	if (this.sprite != undefined)
-	{
-		this.sprite.draw(ctx, this.x, this.y, this.width, this.height);
-	}
-
 	// Debug draw a circle for this position
 	ctx.fillStyle = "rgb(255,0,255)";
 	ctx.fillRect(this.x - 1, this.y - 1, 3,3);
 	ctx.stroke();
+
+	var renderPos = [this.x, this.y];
+	var renderScale = [this.width, this.height];
+	var renderOffset = this.spriteOffset;
+
+	if (this.sprite != undefined)
+	{
+		this.sprite.draw(ctx, renderPos, renderScale, renderOffset);
+	}
 };
 
 GameObject.prototype.collidesWith = function(other) 

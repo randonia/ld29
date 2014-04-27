@@ -1,37 +1,30 @@
-var x;
-var y;
-var width;
-var height;
-var type = {
+var UIObject_TYPES = {
 	PROGRESS_BAR : 0,
 	SCROLL_TEXT : 1
 };
 
-//For PROGRESS_BAR
-var baseSprite;
-var fillSprite;
-
 function UIObject()
 {
-	this.x;
-	this.y;
-	this.width;
-	this.height;
-	this.type;
+	this.UIType;
 }
 
-UIObject.prototype.createProgressBar = function(baseSprite, fillSprite)
+UIObject.prototype.createProgressBar = function(baseSprite, fillSprite, 
+										basePos, fillPos, baseScale, fillScale)
 {
-	this.type = type.PROGRESS_BAR;
 	this.baseSprite = baseSprite;
+	this.basePos = basePos;
+	this.baseScale = baseScale;
+
 	this.fillSprite = fillSprite;
+	this.fillPos = fillPos;
+	this.fillScale = fillScale;
 }
 
 UIObject.prototype.update = function(delta)
 {
-	switch (this.type)
+	switch (this.UIType)
 	{
-		case type.PROGRESS_BAR:
+		case UIObject_TYPES.PROGRESS_BAR:
 			this.updateProgressBar(delta);
 			break;
 	}
@@ -39,9 +32,9 @@ UIObject.prototype.update = function(delta)
 
 UIObject.prototype.draw = function(ctx)
 {
-	switch (this.type)
+	switch (this.UIType)
 	{
-		case type.PROGRESS_BAR:
+		case UIObject_TYPES.PROGRESS_BAR:
 			this.drawProgressBar(ctx);
 			break;
 	}
@@ -63,10 +56,10 @@ UIObject.prototype.drawProgressBar = function(ctx)
 {
 	if (this.baseSprite != undefined)
 	{
-		this.baseSprite.draw(ctx, x, y, width, height);
+		this.baseSprite.draw(ctx, this.basePos, this.baseScale, [0,0]);
 	}
 	if (this.fillSprite != undefined)
 	{
-		this.fillSprite.draw(ctx, x, y, width, height);
+		this.fillSprite.draw(ctx, this.fillPos, this.fillScale, [0,0]);
 	}
 }
