@@ -46,3 +46,5 @@ GameObject.prototype.collidesWith = function(other)
 
 // React to the collision appropriately
 GameObject.prototype.handleCollision = function(other){};
+
+GameObject.prototype.handleDeath = function(){};

@@ -135,7 +135,16 @@ Player.prototype.stateMoving = function(delta)
 
 Player.prototype.stateSticking = function(delta) 
 {
-
+	if (isKeyDown('space') && !this.isSpaceDown)
+	{
+		this.nearestHumpable.humpPoints -= 1;
+		if (this.nearestHumpable.humpPoints <= 0)
+		{
+			console.log("Kill it");
+			this.nearestHumpable.explode();
+		}
+	}
+	this.isSpaceDown = isKeyDown('space');
 };
 
 Player.prototype.doFlick = function(dirX, dirY, bType)
@@ -170,23 +179,30 @@ Player.prototype.doFlick = function(dirX, dirY, bType)
 }
 
 Player.prototype.handleInput = function(){
-	if (isKeyDown('a')){
+	if (isKeyDown('a'))
+	{
 		this.vX = -pDX;
 	}
-	if (isKeyDown('d')){
+	if (isKeyDown('d'))
+	{
 		this.vX = pDX
 	}
-	if (isKeyDown('w')){
+	if (isKeyDown('w'))
+	{
 		this.vY = -pDY
 	}
-	if (isKeyDown('s')){
+	if (isKeyDown('s'))
+	{
 		this.vY = pDY
 	}
 }
 
 Player.prototype.startHumpTimer = function() 
 {
-	
+	this.timer = new TimerCircle();
+	this.timer.x = this.x;
+	this.timer.y = this.y;
+	this.timer.start(500, this.killTimer)
 };
 
 Player.prototype.killTimer = function()
@@ -211,10 +227,7 @@ Player.prototype.handleCollision = function(other)
 		case "Humpable":
 			this.nearestHumpable = other;
 			this.state = Player_states['sticking'];
-			this.timer = new TimerCircle();
-			this.timer.x = this.x;
-			this.timer.y = this.y;
-			this.timer.start(500, this.killTimer)
+			this.startHumpTimer();
 			break;
 	}
 };

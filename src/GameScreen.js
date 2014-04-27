@@ -7,7 +7,8 @@ var BOUNDBOTTOM = 500;
 var BOUNDWIDTH = BOUNDRIGHT - BOUNDLEFT;
 var BOUNDHEIGHT = BOUNDBOTTOM - BOUNDTOP;
 
-var gameObjects = []
+var gameObjects = [];
+var deadObjects = [];
 var player;
 var collisionManager = new CollisionManager();
 
@@ -50,7 +51,19 @@ GameScreen.prototype.update = function(delta){
 	for (var index = 0; index < gameObjects.length; ++index) {
 		var go = gameObjects[index];
 		go.update(delta);
+		if (!go.alive)
+		{
+			deadObjects.push(go);
+		}
 	};
+
+	while (deadObjects.length > 0)
+	{
+		var deadObj = deadObjects.pop();
+		deadObj.handleDeath();
+		gameObjects.splice(gameObjects.indexOf(deadObj),1);
+		delete deadObj;
+	}
 	collisionManager.checkCollisions(gameObjects);
 	collisionManager.resolveCollisions();
 };
