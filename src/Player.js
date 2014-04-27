@@ -86,6 +86,7 @@ Player.prototype.update = function(delta){
 		if (this.timer.progress >= 1)
 		{
 			this.killTimer();
+			this.bounceFail();
 		}
 	}
 }
@@ -149,7 +150,10 @@ Player.prototype.stateSticking = function(delta)
 		if (this.nearestHumpable.humpPoints <= 0)
 		{
 			console.log("Kill it");
+			this.bounceWin();
 			this.nearestHumpable.explode();
+			delete this.timer;
+			this.timer = undefined;
 		}
 	}
 	this.isSpaceDown = isKeyDown('space');
@@ -177,6 +181,9 @@ Player.prototype.doFlick = function(dirX, dirY, bType)
 			distance = 100;
 			duration = 200;
 			break;
+		case 'kill':
+			distance = 10;
+			duration = 100;
 	} 
 	this.moveDirX = this.vX * distance;
 	this.moveDirY = this.vY * distance;
@@ -210,14 +217,21 @@ Player.prototype.startHumpTimer = function()
 	this.timer = new TimerCircle();
 	this.timer.x = this.x;
 	this.timer.y = this.y;
-	this.timer.start(500, this.killTimer)
+	this.timer.start(254, this.killTimer)
 };
 
 Player.prototype.killTimer = function()
 {
 	delete this.timer;
-	this.bounceFail();
 }
+
+Player.prototype.bounceWin = function() 
+{
+	var dirX = this.x - this.nearestHumpable.x;
+	var dirY = this.y - this.nearestHumpable.y;
+
+	this.doFlick(dirX, dirY, 'kill');
+};
 
 Player.prototype.bounceFail = function() 
 {

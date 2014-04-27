@@ -13,10 +13,10 @@ var UIObjects = [];
 var player;
 var collisionManager = new CollisionManager();
 
+var levelTimer = 0;
+
 function GameScreen(){
-	createPlayer();
-	createHumpables();
-	createUI();
+	this.init();
 };
 
 function createPlayer()
@@ -64,9 +64,50 @@ function createUI()
 	UIObjects.push(progressBar);
 }
 
-GameScreen.prototype.init = function(){};
+GameScreen.prototype.init = function()
+{
+	createPlayer();
+	createHumpables();
+	createUI();
+
+	this.levelTimer = 150000;
+	this.startTime = Date.now();
+	this.state = 'playing';
+
+};
 
 GameScreen.prototype.update = function(delta){
+	switch (this.state)
+	{
+		case 'playing':
+			this.statePlaying(delta);
+			break;
+		case 'paused':
+			break;
+		case 'lose':
+			this.stateLose(delta);
+			break;
+	}
+
+	for (var index = 0; index < UIObjects.length; ++index)
+	{
+		var ui = UIObjects[index];
+		ui.update(delta);
+	};
+
+};
+
+GameScreen.prototype.statePlaying = function(delta) 
+{
+	this.timeRemaining = this.levelTimer - (Date.now() - this.startTime);
+	// Endgame check
+	var now = Date.now();
+	if (this.timeRemaining < 0)
+	{
+		console.log("ENDGAME");
+		this.state = 'lose';
+	}
+
 	for (var index = 0; index < gameObjects.length; ++index) 
 	{
 		var go = gameObjects[index];
@@ -84,15 +125,13 @@ GameScreen.prototype.update = function(delta){
 		gameObjects.splice(gameObjects.indexOf(deadObj),1);
 		delete deadObj;
 	}
-
-	for (var index = 0; index < UIObjects.length; ++index)
-	{
-		var ui = UIObjects[index];
-		ui.update(delta);
-	};
-
 	collisionManager.checkCollisions(gameObjects);
 	collisionManager.resolveCollisions();
+};
+
+GameScreen.prototype.stateLose = function(delta) 
+{
+	// Do some shit
 };
 
 GameScreen.prototype.draw = function(ctx){
@@ -114,6 +153,12 @@ GameScreen.prototype.draw = function(ctx){
 		var ui = UIObjects[index];
 		ui.draw(ctx);
 	};
+
+	// Draw time remaining
+	ctx.fillStyle = 'rgb(0,255,0)';
+	ctx.strokeStyle = 'rgb(15,15,15)';
+	ctx.strokeText(this.timeRemaining, 10, 50);
+	ctx.fillText(this.timeRemaining, 10, 50);
 
 	ctx.restore();
 };
