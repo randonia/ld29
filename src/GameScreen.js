@@ -70,9 +70,7 @@ function createHumpable(x, y)
 	var humpType = Math.random() * HUMPABLE_TYPES_LENGTH;
 	humpType = Math.round(humpType);
 	var hu = new Humpable(humpType);
-	/*var humpSprite = new Sprite('assets/sprites/omega.png', [0,0], [33,22],
-								5, [0, 1, 2, 3], 'horizontal', false);
-	hu.sprite = humpSprite;*/
+
 	hu.x = x;
 	hu.y = y;
 	hu.spriteOffset = [(.5 * hu.width), (.5 * hu.height)];
