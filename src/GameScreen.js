@@ -27,7 +27,7 @@ var MAPS = [
 		 "000000000000",
 		 "000010000100",
 		 "000000000000",
-		 "100101101001"
+		 "100001000001"
 		],
 		[
 		 "000000000000",
@@ -131,7 +131,6 @@ function worldGridToCoords(x, y)
 	var numRow = 8;
 	var thingWidth = worldWidth / numCol;
 	var thingHeight = worldHeight / numRow;
-	11*50 - (50*.5)
 	var xCoord = x * thingWidth + thingWidth * 0.5;
 	var yCoord = y * thingHeight + thingHeight * 0.5;
 
@@ -194,6 +193,7 @@ GameScreen.prototype.statePlaying = function(delta)
 		this.state = 'floorpenetration';
 		this.penetrateStartTime = Date.now();
 		this.penetrateTimeLimit = 2500;
+		this.penetrateTransitionDuration = 200;
 		this.penetratePressesRequired = 10;
 		this.penetrateNumPresses = 0;
 	}
@@ -293,7 +293,7 @@ GameScreen.prototype.draw = function(ctx){
 	};
 
 	// Penetration meter testing
-	if (this.state == 'floorpenetration' || true) // testing
+	if (this.state == 'floorpenetration')
 	{
 		var rect = {
 			'x': this.player.x + 25,

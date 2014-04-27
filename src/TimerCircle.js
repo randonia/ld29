@@ -18,7 +18,7 @@ TimerCircle.prototype.start = function(duration)
 TimerCircle.prototype.addTime = function(added_time) 
 {
 	this.duration = Math.min(this.duration + added_time,
-							 this.og_duration * 3);
+							 this.og_duration * 10);
 };
 
 TimerCircle.prototype.draw = function(ctx) 

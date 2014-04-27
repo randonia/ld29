@@ -154,7 +154,7 @@ Player.prototype.stateSticking = function(delta)
 	if (isKeyDown('space') && !this.isSpaceDown)
 	{
 		this.nearestHumpable.humpPoints -= 1;
-		this.timer.addTime(500);
+		this.timer.addTime(150);
 		if (this.nearestHumpable.humpPoints <= 0)
 		{
 			console.log("Kill it");
@@ -227,7 +227,7 @@ Player.prototype.startHumpTimer = function()
 	this.timer = new TimerCircle();
 	this.timer.x = this.x;
 	this.timer.y = this.y;
-	this.timer.start(254, this.killTimer)
+	this.timer.start(350, this.killTimer)
 };
 
 Player.prototype.killTimer = function()

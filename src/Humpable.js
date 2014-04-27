@@ -25,7 +25,6 @@ function Humpable(humpableType){
 	this.width = 1;
 	this.height = 1;
 	this.name = "Humpable";
-	this.collisionModel = new CollisionModel(this);
 	this.humpPoints = Math.random() * 5 + 5;
 	this.state = 'idle';
 
@@ -52,6 +51,7 @@ function Humpable(humpableType){
 			this.height = 24;
 			break;
 	}
+	this.collisionModel = new CollisionModel(this);
 }
 
 Humpable.prototype.update = function(delta) 
