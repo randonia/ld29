@@ -52,6 +52,7 @@ GameScreen.prototype.update = function(delta){
 		go.update(delta);
 	};
 	collisionManager.checkCollisions(gameObjects);
+	collisionManager.resolveCollisions();
 };
 
 GameScreen.prototype.draw = function(ctx){

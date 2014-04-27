@@ -8,7 +8,7 @@ var pDY = pDX;
 var Player_states =
 {
 	'idle':0,
-	'flicking':1,
+	'sticking':1,
 	'moving':2
 }
 
@@ -49,12 +49,16 @@ Player.prototype.draw = function(ctx){
 		ctx.stroke();
 		ctx.closePath();
 	}
+
+	if (this.timer != undefined)
+	{
+		this.timer.draw(ctx);
+	}
 }
 
 Player.prototype.update = function(delta){
 	this._update(delta);
 	this.handleInput();
-	
 	switch(this.state)
 	{
 		case Player_states['idle']:
@@ -63,6 +67,18 @@ Player.prototype.update = function(delta){
 		case Player_states['moving']:
 			this.stateMoving(delta);
 			break;
+		case Player_states['sticking']:
+			this.stateSticking(delta);
+			break;
+	}
+
+	if (this.timer != undefined)
+	{
+		this.timer.update(delta);
+		if (this.timer.progress >= 1)
+		{
+			this.killTimer();
+		}
 	}
 }
 
@@ -86,7 +102,7 @@ Player.prototype.stateIdle = function(delta)
 			var mag_sqr = (dirX*dirX + dirY*dirY);
 			if (mag_sqr > max_flick)
 			{
-				this.doFlick(dirX, dirY);
+				this.doFlick(dirX, dirY, 'flick');
 			}
 		case 'up':
 			this.flickEnd.x = Mouse.x;
@@ -117,8 +133,12 @@ Player.prototype.stateMoving = function(delta)
 	}
 };
 
+Player.prototype.stateSticking = function(delta) 
+{
 
-Player.prototype.doFlick = function(dirX, dirY)
+};
+
+Player.prototype.doFlick = function(dirX, dirY, bType)
 {
 	var magnitude = Math.sqrt(dirX*dirX+dirY*dirY);
 	this.vX = dirX / magnitude;
@@ -128,12 +148,24 @@ Player.prototype.doFlick = function(dirX, dirY)
 	this.moveStartX = this.x;
 	this.moveStartY = this.y;
 
-	var distance = 300;
+	var distance;
+	var duration;
+	switch(bType)
+	{
+		case 'flick':
+			distance = 300;
+			duration = 500;
+			break;
+		case 'fail':
+			distance = 100;
+			duration = 200;
+			break;
+	} 
 	this.moveDirX = this.vX * distance;
 	this.moveDirY = this.vY * distance;
 
 	this.moveTimeStart = Date.now();
-	this.moveTimeDuration = 500;
+	this.moveTimeDuration = duration;
 
 }
 
@@ -152,12 +184,37 @@ Player.prototype.handleInput = function(){
 	}
 }
 
+Player.prototype.startHumpTimer = function() 
+{
+	
+};
+
+Player.prototype.killTimer = function()
+{
+	delete this.timer;
+	this.bounceFail();
+}
+
+Player.prototype.bounceFail = function() 
+{
+	var dirX = this.x - this.nearestHumpable.x;
+	var dirY = this.y - this.nearestHumpable.y;
+
+	this.doFlick(dirX, dirY, 'fail');
+};
+
 Player.prototype.handleCollision = function(other) 
 {
+	console.log("Player handling collision with " + other.name);
 	switch(other.name)
 	{
 		case "Humpable":
-			this.nearestHumpable = other
+			this.nearestHumpable = other;
+			this.state = Player_states['sticking'];
+			this.timer = new TimerCircle();
+			this.timer.x = this.x;
+			this.timer.y = this.y;
+			this.timer.start(500, this.killTimer)
 			break;
 	}
 };
