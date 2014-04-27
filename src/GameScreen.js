@@ -13,8 +13,8 @@ var collisionManager = new CollisionManager();
 
 function GameScreen(){
 	var plr = new Player();
-	plr.x = 5;
-	plr.y = 10;
+	plr.x = 150;
+	plr.y = 200;
 	plr.sprite = new Sprite
 	(
 		'assets/sprites/frog.png', 
@@ -28,7 +28,7 @@ function GameScreen(){
 	player = plr;
 	
 	var hu = new Humpable();
-	hu.x = 200;
+	hu.x = 400;
 	hu.y = 200;
 	hu.sprite = new Sprite
 	(

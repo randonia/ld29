@@ -2,8 +2,15 @@
 
 // Some Consts
 // Player delta x/y (for movement velocities)
-var pDX = 3;
+var pDX = 150;
 var pDY = pDX;
+
+var Player_states =
+{
+	'idle':0,
+	'flicking':1,
+	'moving':2
+}
 
 // Inheritance!
 Player.prototype = new GameObject();
@@ -21,9 +28,9 @@ function Player(){
 	this.collisionModel.staticObj = false;
 	this.name = "Player";
 	this.nearestHumpable = undefined;
-
-	this.flickStart;
-	this.flickEnd;
+	this.state = Player_states.idle;
+	this.flickStart = {'x':0,'y':0};
+	this.flickEnd = {'x':0,'y':0};
 }
 
 Player.prototype.draw = function(ctx){
@@ -37,7 +44,7 @@ Player.prototype.draw = function(ctx){
 	{
 		ctx.beginPath();
 		ctx.strokeStyle = 'rgb(255,255,0)';
-		ctx.moveTo(this.x, this.y);
+		ctx.moveTo(this.flickStart.x, this.flickStart.y);
 		ctx.lineTo(Mouse.x, Mouse.y);
 		ctx.stroke();
 		ctx.closePath();
@@ -47,10 +54,86 @@ Player.prototype.draw = function(ctx){
 Player.prototype.update = function(delta){
 	this._update(delta);
 	this.handleInput();
-	// Movement
-	this.x = Math.clamp(this.x + this.vX, BOUNDLEFT, BOUNDRIGHT);
-	this.y = Math.clamp(this.y + this.vY, BOUNDTOP, BOUNDBOTTOM);
+	
+	switch(this.state)
+	{
+		case Player_states['idle']:
+			this.stateIdle(delta);
+			break;
+		case Player_states['moving']:
+			this.stateMoving(delta);
+			break;
+	}
+}
 
+Player.prototype.stateIdle = function(delta) 
+{
+	switch(Mouse.state)
+	{
+		case 'down':
+			this.flickStart.x = Mouse.x;
+			this.flickStart.y = Mouse.y;
+			break;
+		case 'dragged':
+			this.flickStart.x = mouseDragStart.x;
+			this.flickStart.y = mouseDragStart.y;
+			this.flickEnd.x = Mouse.x;
+			this.flickEnd.y = Mouse.y;
+
+			var max_flick = 2500;
+			var dirX = this.flickEnd.x - this.flickStart.x;
+			var dirY = this.flickEnd.y - this.flickStart.y;
+			var mag_sqr = (dirX*dirX + dirY*dirY);
+			if (mag_sqr > max_flick)
+			{
+				this.doFlick(dirX, dirY);
+			}
+		case 'up':
+			this.flickEnd.x = Mouse.x;
+			this.flickEnd.y = Mouse.y;
+			break;
+	}
+};
+
+Player.prototype.stateMoving = function(delta) 
+{
+	// Movement
+	var now = Date.now();
+	var dT = now - this.moveTimeStart;
+	this.x = Math.clamp(Math.easeOutQuint(dT, 
+										  this.moveStartX, 
+										  this.moveDirX,
+										  this.moveTimeDuration), 
+						BOUNDLEFT, BOUNDRIGHT);
+	this.y = Math.clamp(Math.easeOutQuint(dT, 
+										  this.moveStartY, 
+										  this.moveDirY,
+										  this.moveTimeDuration), 
+						BOUNDTOP, BOUNDBOTTOM);
+	if (this.moveTimeStart + this.moveTimeDuration < now)
+	{
+		this.state = Player_states['idle'];
+
+	}
+};
+
+
+Player.prototype.doFlick = function(dirX, dirY)
+{
+	var magnitude = Math.sqrt(dirX*dirX+dirY*dirY);
+	this.vX = dirX / magnitude;
+	this.vY = dirY / magnitude;
+	this.state = Player_states['moving'];
+
+	this.moveStartX = this.x;
+	this.moveStartY = this.y;
+
+	var distance = 300;
+	this.moveDirX = this.vX * distance;
+	this.moveDirY = this.vY * distance;
+
+	this.moveTimeStart = Date.now();
+	this.moveTimeDuration = 500;
 
 }
 
@@ -61,21 +144,11 @@ Player.prototype.handleInput = function(){
 	if (isKeyDown('d')){
 		this.vX = pDX
 	}
-	if(isKeyUp('a') && isKeyUp('d')){
-		this.vX = 0;
-	}
 	if (isKeyDown('w')){
 		this.vY = -pDY
 	}
 	if (isKeyDown('s')){
 		this.vY = pDY
-	}
-	if(isKeyUp('w') && isKeyUp('s')){
-		this.vY = 0;
-	}
-	if (this.vX != 0 && this.vY != 0){
-		this.vX = this.vX / SQRT2;
-		this.vY = this.vY / SQRT2;
 	}
 }
 
