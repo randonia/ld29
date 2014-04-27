@@ -151,6 +151,7 @@ Player.prototype.stateSticking = function(delta)
 		{
 			console.log("Kill it");
 			this.bounceWin();
+			this.nearestHumpable.collisionModel.enabled = false;
 			this.nearestHumpable.explode();
 			delete this.timer;
 			this.timer = undefined;

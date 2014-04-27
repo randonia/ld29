@@ -39,7 +39,6 @@ var MAPS = [
 		 "000100000000",
 		 "000000000000"
 		],
-
 	]
 
 var gameObjects = [];
@@ -116,11 +115,9 @@ GameScreen.prototype.buildWorld = function()
 			switch(key)
 			{
 				case "P":
-					console.log("FOUND P");
 					var plr = createPlayer(coords.x, coords.y);
 					break;
 				case "1":
-					console.log("FOUND 1");
 					var hu = createHumpable(coords.x, coords.y);
 					break;
 

@@ -7,6 +7,7 @@ function CollisionModel(gameObject)
 	this.height = gameObject.height;
 	this.correctionX = 0;
 	this.correctionY = 0;
+	this.enabled = true;
 	this.staticObj = true;
 	Object.defineProperty(this, 'x',
 	{
@@ -46,6 +47,7 @@ CollisionModel.prototype.collidesWith = function(other)
 {
 	// Via SAP!
 	if(this == other) return false;
+	if(!this.enabled || !other.enabled) return false;
 
 	var len_x = Math.abs(other.x - this.x);
 	var half_width_this = this.width*0.5;
