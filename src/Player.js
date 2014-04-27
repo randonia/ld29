@@ -39,6 +39,7 @@ function Player(){
 	this.state = Player_states.idle;
 	this.flickStart = {'x':0,'y':0};
 	this.flickEnd = {'x':0,'y':0};
+	this.numHumps = 0;
 }
 
 Player.prototype.draw = function(ctx){
@@ -147,9 +148,11 @@ Player.prototype.stateSticking = function(delta)
 	if (isKeyDown('space') && !this.isSpaceDown)
 	{
 		this.nearestHumpable.humpPoints -= 1;
+		this.timer.addTime(500);
 		if (this.nearestHumpable.humpPoints <= 0)
 		{
 			console.log("Kill it");
+			this.numHumps += 1;
 			this.bounceWin();
 			this.nearestHumpable.collisionModel.enabled = false;
 			this.nearestHumpable.explode();

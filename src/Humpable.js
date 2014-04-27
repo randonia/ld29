@@ -10,7 +10,7 @@ function Humpable(){
 	this.height = 50;
 	this.name = "Humpable";
 	this.collisionModel = new CollisionModel(this);
-	this.humpPoints = 1;
+	this.humpPoints = Math.random() * 5 + 5;
 	this.state = 'idle';
 }
 

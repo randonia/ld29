@@ -38,7 +38,7 @@ var MAPS = [
 		 "000000010000",
 		 "000100000000",
 		 "000000000000"
-		],
+		]
 	]
 
 var gameObjects = [];
@@ -48,6 +48,7 @@ var player;
 var collisionManager = new CollisionManager();
 
 var levelTimer = 0;
+var numRequiredHumps = 1;
 
 function GameScreen(){
 	this.init();
@@ -115,12 +116,11 @@ GameScreen.prototype.buildWorld = function()
 			switch(key)
 			{
 				case "P":
-					var plr = createPlayer(coords.x, coords.y);
+					this.player = createPlayer(coords.x, coords.y);
 					break;
 				case "1":
 					var hu = createHumpable(coords.x, coords.y);
 					break;
-
 			}
 		}
 	}
@@ -145,10 +145,11 @@ GameScreen.prototype.init = function()
 	this.buildWorld()
 	createUI();
 
+	this.player.numHumps = 0;
 	this.levelTimer = 150000;
 	this.startTime = Date.now();
 	this.state = 'playing';
-
+	this.shaker = {'x':0, 'y':0};
 };
 
 GameScreen.prototype.update = function(delta){
@@ -161,6 +162,12 @@ GameScreen.prototype.update = function(delta){
 			break;
 		case 'lose':
 			this.stateLose(delta);
+			break;
+		case 'floorpenetration':
+			this.stateFloorPenetration(delta);
+			break;
+		case 'nextstage':
+			this.stateGoToNextLevel(delta);
 			break;
 	}
 
@@ -181,6 +188,16 @@ GameScreen.prototype.statePlaying = function(delta)
 	{
 		console.log("ENDGAME");
 		this.state = 'lose';
+	}
+	// Victory check
+	if (this.player.numHumps >= numRequiredHumps)
+	{
+		console.log('Going into penetration phase');
+		this.state = 'floorpenetration';
+		this.penetrateStartTime = Date.now();
+		this.penetrateTimeLimit = 2500;
+		this.penetratePressesRequired = 10;
+		this.penetrateNumPresses = 0;
 	}
 
 	for (var index = 0; index < gameObjects.length; ++index) 
@@ -204,13 +221,61 @@ GameScreen.prototype.statePlaying = function(delta)
 	collisionManager.resolveCollisions();
 };
 
+GameScreen.prototype.stateFloorPenetration = function(delta) 
+{
+	var now = Date.now();
+
+	if (isKeyDown('space') && this.spaceWasUp)
+	{
+		this.penetrateNumPresses += 1;
+	}
+	this.spaceWasUp = isKeyUp('space');
+
+	var shakeVal = Math.min(Math.easeInQuint(this.penetrateNumPresses,
+									0,
+									25,
+									15),
+							10);
+	this.shaker.x = Math.random() * shakeVal - shakeVal*0.5;
+	this.shaker.y = Math.random() * shakeVal - shakeVal*0.5;
+
+	// Did they succeed?
+	if (this.penetrateTimeLimit + this.penetrateStartTime < now)
+	{
+
+		this.setUpStageTransition();
+	}
+};
+
+GameScreen.prototype.setUpStageTransition = function() 
+{
+	this.stateTransitionStartTime = Date.now();
+	this.stateTransitionDuration = 2000;
+	this.stateTransitionInitial = 0;
+	this.stateTransitionTarget = 15;
+};
+
 GameScreen.prototype.stateLose = function(delta) 
 {
 	// Do some shit
 };
 
+GameScreen.prototype.stateGoToNextLevel = function(delta) 
+{
+	// Start the next stage animootion if it doesn't exist
+	var shakeVal = Math.min(Math.easeInQuint(Date.now() - this.stateTransitionStartTime,
+									 this.stateTransitionInitial,
+									 this.stateTransitionTarget - this.stateTransitionInitial,
+									 this.stateTransitionDuration
+									),
+							this.stateTransitionTarget);
+	this.shaker.x = (Math.random() * shakeVal) - shakeVal*0.5
+	this.shaker.y = (Math.random() * shakeVal) - shakeVal*0.5;
+};
+
 GameScreen.prototype.draw = function(ctx){
 	ctx.save();
+	ctx.translate(this.shaker['x'], this.shaker['y']);
 	ctx.clearRect(0,0, GAMEWIDTH, GAMEHEIGHT);
 	
 	// Gameplay boundaries (for testing)
@@ -229,11 +294,40 @@ GameScreen.prototype.draw = function(ctx){
 		ui.draw(ctx);
 	};
 
+	// Penetration meter testing
+	if (this.state == 'floorpenetration' || true) // testing
+	{
+		var rect = {
+			'x': this.player.x + 25,
+			'y': this.player.y - 59,
+			'w': 25,
+			'h': 75
+			}
+		// BGRect
+		ctx.strokeStyle = 'rgb(255,255,0)';
+		ctx.fillStyle = 'rgb(25,25,25)';
+		ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+		ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+
+		// FG (value) Rect
+		ctx.strokeStyle = '#4DA3FF';
+		ctx.fillStyle = '#DBDBDB';
+		var yPercent = (this.penetrateNumPresses / this.penetratePressesRequired);
+		var yOffset = rect.h * yPercent;
+		ctx.fillRect(rect.x, rect.h + rect.y - yOffset, rect.w, rect.h * yPercent);
+	}
+
 	// Draw time remaining
 	ctx.fillStyle = 'rgb(0,255,0)';
 	ctx.strokeStyle = 'rgb(15,15,15)';
 	ctx.strokeText(this.timeRemaining, 10, 50);
 	ctx.fillText(this.timeRemaining, 10, 50);
+
+	// Draw placeholder score
+	ctx.fillStyle = 'rgb(0,255,255)';
+	ctx.strokeStyle = 'rgb(0,0,0)';
+	ctx.strokeText(this.player.numHumps, BOUNDRIGHT, 50)
+	ctx.fillText(this.player.numHumps, BOUNDRIGHT, 50)
 
 	ctx.restore();
 };

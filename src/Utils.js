@@ -16,3 +16,8 @@ Math.easeOutQuint = function (t, b, c, d) {
 	t--;
 	return c*(t*t*t*t*t + 1) + b;
 };
+
+Math.easeInQuint = function (t, b, c, d) {
+	t /= d;
+	return c*t*t*t*t*t + b;
+};
