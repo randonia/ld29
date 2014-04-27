@@ -1,11 +1,46 @@
 // Game Screen object
 
+// 600 wide x 400 tall
 var BOUNDLEFT = 100;
 var BOUNDRIGHT = 700;
 var BOUNDTOP = 100;
 var BOUNDBOTTOM = 500;
 var BOUNDWIDTH = BOUNDRIGHT - BOUNDLEFT;
 var BOUNDHEIGHT = BOUNDBOTTOM - BOUNDTOP;
+
+var MAPS = [
+		[
+		 "000000000000",
+		 "0P0001000000",
+		 "000000000000",
+		 "001000001000",
+		 "000010000000",
+		 "000000100000",
+		 "000000000100",
+		 "000000000000"
+		],
+		[
+		 "000000000001",
+		 "0P0000000000",
+		 "000000100000",
+		 "000000000000",
+		 "000000000000",
+		 "000010000100",
+		 "000000000000",
+		 "100101101001"
+		],
+		[
+		 "000000000000",
+		 "000100000000",
+		 "000000001000",
+		 "000000000000",
+		 "0P0000000000",
+		 "000000010000",
+		 "000100000000",
+		 "000000000000"
+		],
+
+	]
 
 var gameObjects = [];
 var deadObjects = [];
@@ -19,29 +54,30 @@ function GameScreen(){
 	this.init();
 };
 
-function createPlayer()
+function createPlayer(x, y)
 {
 	var plr = new Player();
 	var frogSprite = new Sprite('assets/sprites/frog.png', [3,1], [20,24],
 								10, [0,1,2,3,4,5,6], 'horizontal', false);
-	plr.x = 150;
-	plr.y = 200;
+	plr.x = x;
+	plr.y = y;
 	plr.sprite = frogSprite;
 	plr.spriteOffset = [(.5 * plr.width), (.5 * plr.height)];
 	gameObjects.push(plr);
-	player = plr;
+	return plr;
 }
 
-function createHumpables()
+function createHumpable(x, y)
 {
 	var hu = new Humpable();
 	var humpSprite = new Sprite('assets/sprites/omega.png', [0,0], [33,22],
 								5, [0, 1, 2, 3], 'horizontal', false);
-	hu.x = 400;
-	hu.y = 200;
+	hu.x = x;
+	hu.y = y;
 	hu.sprite = humpSprite;
 	hu.spriteOffset = [(.5 * hu.width), (.5 * hu.height)];
 	gameObjects.push(hu);
+	return hu;
 }
 
 function createUI()
@@ -64,10 +100,52 @@ function createUI()
 	UIObjects.push(progressBar);
 }
 
+GameScreen.prototype.buildWorld = function() 
+{
+	// createPlayer();
+	// createHumpable();
+	var world_index = Math.round(Math.random() * (MAPS.length-1));
+	var world_arrays = MAPS[world_index];
+	for(var i = 0; i < world_arrays.length; ++i)
+	{
+		var row = world_arrays[i];
+		for(var j = 0; j < row.length; ++j)
+		{
+			var key = row[j];
+			coords = worldGridToCoords(j,i);
+			switch(key)
+			{
+				case "P":
+					console.log("FOUND P");
+					var plr = createPlayer(coords.x, coords.y);
+					break;
+				case "1":
+					console.log("FOUND 1");
+					var hu = createHumpable(coords.x, coords.y);
+					break;
+
+			}
+		}
+	}
+};
+function worldGridToCoords(x, y)
+{
+	var worldWidth = 600;
+	var worldHeight = 400;
+	var numCol = 12;
+	var numRow = 8;
+	var thingWidth = worldWidth / numCol;
+	var thingHeight = worldHeight / numRow;
+	11*50 - (50*.5)
+	var xCoord = x * thingWidth + thingWidth * 0.5;
+	var yCoord = y * thingHeight + thingHeight * 0.5;
+
+	return {'x':xCoord + BOUNDLEFT, 'y':yCoord + BOUNDTOP}
+}
+
 GameScreen.prototype.init = function()
 {
-	createPlayer();
-	createHumpables();
+	this.buildWorld()
 	createUI();
 
 	this.levelTimer = 150000;
